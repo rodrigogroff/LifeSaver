@@ -1,0 +1,9 @@
+﻿
+namespace Master.Entity.Domain
+{
+    public class DtoAuthForgotConfirm
+    {
+        public string mobile { get; set; }
+        public string codigo { get; set; }
+    }
+}
