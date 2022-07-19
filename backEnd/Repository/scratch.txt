@@ -1,0 +1,19 @@
+﻿
+ItemFolder		"A Pagar"
+	ItemFolder		"Despesas pessoais"	
+		Item		> "Barbeiro" (saida) padrão R$ 35, mensal		
+			ItemDrop	38 ativo  
+			ItemDrop	38 ativo  
+	ItemFolder		"Despesas conjugais"	
+		Item		> "Colégio" (saida) padrao 1200, mensal
+
+ItemFolder		"A Receber"
+
+	ItemFolder		"Fixo"	
+		Item		> "Salario" (entrada) R$ 10000 mensal			
+			ItemDrop	998 ativo  
+	ItemFolder		"Freelancing"	
+		Item		> "Empresa X" (entrada)	R$ 1000 random
+			ItemDrop	200 ativo  
+		Item		> "Fulano" (entrada) R$ 1000 random			
+			ItemDrop	600 ativo  
