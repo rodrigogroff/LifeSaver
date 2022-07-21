@@ -26,6 +26,8 @@ namespace Integration
 
             var mobile = Console.ReadLine();
 
+            #region - code - 
+
             try
             {
                 var dest = baseUri + @"api/v1/auth/register";
@@ -47,14 +49,16 @@ namespace Integration
 
                 var response = client.Execute(request);
 
+                Console.WriteLine(response.Content);
+
                 if (response.StatusCode == System.Net.HttpStatusCode.OK)
                 {
                     Console.WriteLine(" ==== REGISTER ".PadRight(30, ' ') + "OK");
                 }
                 else
-                {
-                    Console.WriteLine(response.Content);
+                {                    
                     Console.WriteLine(" # FAILED REGISTER");
+                    return;
                 }
             }
             catch (System.Exception ex)
@@ -62,8 +66,45 @@ namespace Integration
                 Console.WriteLine(ex.Message);
             }
 
+            #endregion
+
+            Console.WriteLine("--------------------");
+            Console.WriteLine("CODIGO:");
+
+            #region - code - 
+
+            try
+            {
+                var dest = baseUri + @"api/v1/auth/magic_sms_list";
+
+                var client = new RestClient(dest);
+                var request = new RestRequest();
+
+                request.AddHeader("Content-Type", "application/json");
+                request.RequestFormat = DataFormat.Json;
+                request.Method = Method.POST;
+
+                request.AddBody(new
+                {
+                    mobile = mobile,
+                    magic = "142536"
+                });
+
+                var response = client.Execute(request);
+
+                Console.WriteLine(response.Content);
+            }
+            catch (System.Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+
+            #endregion
+
             Console.WriteLine("--------------------");
             Console.WriteLine("Digite o codigo recebido:");
+
+            #region - code - 
 
             try
             {
@@ -98,6 +139,10 @@ namespace Integration
             {
                 Console.WriteLine(ex.Message);
             }
+
+            #endregion
+
+            Console.ReadLine();
         }
     }
 }

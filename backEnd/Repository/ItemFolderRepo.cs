@@ -144,10 +144,5 @@ namespace Master.Repository
 
             #endregion
         }
-
-        public bool GetById(string conn, long fkFolder, out ItemFolder )
-        {
-            throw new NotImplementedException();
-        }
     }
 }

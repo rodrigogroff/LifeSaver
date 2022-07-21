@@ -8,22 +8,22 @@ namespace Master.Service.Domain.Auth
     {
         public IUserRepo userRepo = new UserRepo();
 
-        public bool Login(string conn, string login, string password, out DtoUser usr)
+        public bool Login(string conn, string email, string password, out DtoUser usr)
         {
             usr = new DtoUser();
 
             if (string.IsNullOrEmpty(conn))
                 return ReportError("Connection information failed");
 
-            if (string.IsNullOrEmpty(login))
-                return ReportError("Login information failed");
+            if (string.IsNullOrEmpty(email))
+                return ReportError("Email information failed");
 
             if (string.IsNullOrEmpty(password))
                 return ReportError("Password information failed");
 
             User db_user;
 
-            if (!userRepo.GetUserByEmail(conn, login, out db_user))
+            if (!userRepo.GetUserByEmail(conn, email, out db_user))
                 return ReportError("Error 0xE1");
 
             if (db_user.bActive == false)

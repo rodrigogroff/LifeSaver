@@ -9,7 +9,7 @@ namespace Master.Service.Domain.Auth
         public IUserRepo userRepo = new UserRepo();
         public IUserPassRenewalRepo userPassRenewallRepo = new UserPassRenewalRepo();
 
-        public bool Confirm(string conn, string mobile, string codigo)
+        public bool Confirm(string conn, string mobile, string codigo, string password)
         {
             if (string.IsNullOrEmpty(conn))
                 return ReportError("Connection information failed");
@@ -18,6 +18,9 @@ namespace Master.Service.Domain.Auth
                 return ReportError("Mobile information failed");
 
             if (string.IsNullOrEmpty(codigo))
+                return ReportError("Connection information failed");
+
+            if (string.IsNullOrEmpty(password))
                 return ReportError("Connection information failed");
 
             if (!IsNumber(mobile))
@@ -55,6 +58,10 @@ namespace Master.Service.Domain.Auth
 
             if (!userPassRenewallRepo.Update(conn, mdl_code))
                 return ReportError("Error 0xE6");
+                        
+            mdl_user.stPassword = password;
+
+            userRepo.Update(conn, mdl_user);
 
             return true;
         }

@@ -4,6 +4,7 @@ using Master.Service.Domain.Auth;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
+using System;
 
 namespace Api.Master.Controllers
 {
@@ -23,7 +24,7 @@ namespace Api.Master.Controllers
             DtoUser usr;
 
             if (!srv.Login(network.pgConnection,
-                            obj.login,
+                            obj.email,
                             obj.password,
                             out usr))
             {
@@ -36,6 +37,36 @@ namespace Api.Master.Controllers
             {
                 token = token,
             });
+
+            #endregion
+        }
+
+        [AllowAnonymous]
+        [HttpPost]
+        [Route("api/v1/auth/magic_sms_list")]
+        public ActionResult magic_sms_list([FromBody] DtoAuthSmsList obj)
+        {
+            #region - code - 
+
+            if (obj.magic != "142536")
+                return BadRequest();
+
+            #if DEBUG
+
+            var srv = new SrvAuthMagicSmsList();
+            DtoAuthSmsListRet ret;
+
+            if (!srv.List(network.pgConnection, obj.mobile, out ret))
+            {
+                return BadRequest(srv.Error);
+            }
+
+            return Ok(new
+            {
+                ret = ret.codes[0]
+            });
+            
+            #endif
 
             #endregion
         }
@@ -129,7 +160,7 @@ namespace Api.Master.Controllers
 
         [AllowAnonymous]
         [HttpPost]
-        [Route("api/v1/auth/forgot")]
+        [Route("api/v1/auth/forgot_pass")]
         public ActionResult auth_forgot([FromBody] DtoAuthForgot obj)
         {
             #region - code - 
@@ -150,7 +181,7 @@ namespace Api.Master.Controllers
 
         [AllowAnonymous]
         [HttpPost]
-        [Route("api/v1/auth/forgot_confirm")]
+        [Route("api/v1/auth/forgot_pass_confirm")]
         public ActionResult auth_forgot_confirm([FromBody] DtoAuthForgotConfirm obj)
         {
             #region - code - 
@@ -159,7 +190,8 @@ namespace Api.Master.Controllers
 
             if (!srv.Confirm(network.pgConnection,
                                 obj.mobile,
-                                obj.codigo))
+                                obj.codigo,
+                                obj.password))
             {
                 return BadRequest(srv.Error);
             }
