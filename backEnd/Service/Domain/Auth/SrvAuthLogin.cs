@@ -32,6 +32,7 @@ namespace Master.Service.Domain.Auth
             if (db_user.stPassword != password)
                 return ReportError("Error 0xE3");
 
+            usr.id = db_user.id.ToString();
             usr.name = db_user.stName;
             usr.email = db_user.stEmail;
             usr.mobile = db_user.stMobile;

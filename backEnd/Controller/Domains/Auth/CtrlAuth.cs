@@ -41,6 +41,8 @@ namespace Api.Master.Controllers
             #endregion
         }
 
+        #if DEBUG
+
         [AllowAnonymous]
         [HttpPost]
         [Route("api/v1/auth/magic_sms_list")]
@@ -50,8 +52,6 @@ namespace Api.Master.Controllers
 
             if (obj.magic != "142536")
                 return BadRequest();
-
-            #if DEBUG
 
             var srv = new SrvAuthMagicSmsList();
             DtoAuthSmsListRet ret;
@@ -66,10 +66,10 @@ namespace Api.Master.Controllers
                 ret = ret.codes[0]
             });
             
-            #endif
-
             #endregion
         }
+
+        #endif
 
         [AllowAnonymous]
         [HttpPost]

@@ -24,7 +24,7 @@ namespace Master.Service.Domain.Config
             if (fkUser <= 0)
                 return ReportError("User information failed");
 
-            if (userRepo.GetUserById(conn, fkUser, out user))
+            if (!userRepo.GetUserById(conn, fkUser, out user))
                 return ReportError("User information failed");
 
             if (string.IsNullOrEmpty(name))
@@ -38,6 +38,13 @@ namespace Master.Service.Domain.Config
                 if (parentFolder.fkUser != user.id)
                     return ReportError("Folder information failed");
             }
+
+            ItemFolder tst;
+
+            itemFolderRepo.GetByUserFolderName(conn, fkUser, fkFolder, name, out tst);
+
+            if (tst != null)
+                return ReportError("Folder already exists");
 
             var newFolder = new ItemFolder
             {

@@ -10,7 +10,8 @@ namespace Master.Repository
     public interface IItemFolderRepo
     {
         public bool GetById(string conn, long fkFolder, out ItemFolder folder);
-        public bool GetListByFkUser(string conn, long fkUser, out List<ItemFolder> lst);
+        public bool GetByUserFolderName(string conn, long user, long? fkFolder, string name, out ItemFolder folder);
+        public bool GetListByFkUser(string conn, long fkUser, long? fkFolder, out List<ItemFolder> lst);
         public bool Update(string conn, ItemFolder mdl);
         public long Insert(string conn, ItemFolder mdl);
     }
@@ -43,7 +44,7 @@ namespace Master.Repository
             #endregion
         }
 
-        public bool GetListByFkUser(string conn, long fkUser, out List<ItemFolder> lst)
+        public bool GetByUserFolderName(string conn, long user, long? fkFolder, string name, out ItemFolder tbl)
         {
             #region - code - 
 
@@ -53,10 +54,35 @@ namespace Master.Repository
                 {
                     connection.Open();
 
-                    lst = connection.Query<ItemFolder>
-                        ("SELECT * FROM \"ItemFolder\" where \"fkUser\"=@fkUser order by \"stName\"", 
-                        new { fkUser }).
-                        ToList();
+                    tbl = connection.QueryFirstOrDefault<ItemFolder>
+                        ("SELECT * FROM \"ItemFolder\" where \"stName\"=@name and \"fkUser\"=@user " + ( fkFolder != null ? "and \"fkFolder\"=@fkFolder" : "and \"fkFolder\" is null"),
+                        new { name, user, fkFolder });
+                }
+
+                return true;
+            }
+            catch
+            {
+                tbl = null;
+                return false;
+            }
+
+            #endregion
+        }
+
+        public bool GetListByFkUser(string conn, long fkUser, long? fkFolder, out List<ItemFolder> lst)
+        {
+            #region - code - 
+
+            try
+            {
+                using (var connection = new NpgsqlConnection(conn))
+                {
+                    connection.Open();
+
+                    var strCmd = "SELECT * FROM \"ItemFolder\" where \"fkUser\"=@fkUser " + (fkFolder != null ? " and \"fkFolder\"=@fkFolder " : "") + " order by \"stName\"";
+
+                    lst = connection.Query<ItemFolder> ( strCmd, new { fkUser, fkFolder }).ToList();
                 }
 
                 return true;
@@ -129,7 +155,7 @@ namespace Master.Repository
 
                     using (var cmd = new NpgsqlCommand("INSERT INTO \"ItemFolder\" " +
                         "( \"fkFolder\",\"fkUser\",\"dtRegister\",\"bIncome\",\"stName\" ) " +
-                        "VALUES (@fkUser,@fkUser,@dtRegister,@bIncome,@stName)" +
+                        "VALUES (@fkFolder,@fkUser,@dtRegister,@bIncome,@stName)" +
                         ";select currval('public.\"ItemFolder_id_seq\"');", db))
                     {
                         setUserParams(cmd, mdl);
@@ -144,5 +170,7 @@ namespace Master.Repository
 
             #endregion
         }
+
+        
     }
 }

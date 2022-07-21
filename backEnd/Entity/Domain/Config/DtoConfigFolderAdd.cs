@@ -1,5 +1,4 @@
-﻿
-namespace Master.Entity.Domain
+﻿namespace Master.Entity.Domain
 {
     public class DtoConfigFolderAdd
     {
