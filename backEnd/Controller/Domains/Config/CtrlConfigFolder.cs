@@ -7,11 +7,11 @@ using Microsoft.Extensions.Options;
 
 namespace Api.Master.Controllers
 {
+    [Authorize]
     public partial class CtrlConfigFolder : MasterController
     {
         public CtrlConfigFolder(IOptions<LocalNetwork> _network) : base(_network) { }
-
-        [Authorize]
+                
         [HttpPost]
         [Route("api/v1/config/folder_add")]
         public ActionResult folder_add([FromBody] DtoConfigFolderAdd obj)
@@ -35,8 +35,7 @@ namespace Api.Master.Controllers
 
             #endregion
         }
-
-        [Authorize]
+        
         [HttpPost]
         [Route("api/v1/config/folder_list")]
         public ActionResult folder_list([FromBody] DtoConfigFolderList obj)
@@ -61,6 +60,29 @@ namespace Api.Master.Controllers
             {
                 result = ret.subfolders
             });
+
+            #endregion
+        }
+
+        [HttpPost]
+        [Route("api/v1/config/folder_edit")]
+        public ActionResult folder_edit([FromBody] DtoConfigFolderEdit obj)
+        {
+            #region - code - 
+
+            var currentUser = GetCurrentAuthenticatedUser();
+
+            var srv = new SrvConfigFolderEdit();
+
+            if (!srv.FolderEdit(network.pgConnection,
+                                currentUser.ID(),
+                                obj.id,
+                                obj.new_name))
+            {
+                return BadRequest(srv.Error);
+            }
+
+            return Ok();
 
             #endregion
         }

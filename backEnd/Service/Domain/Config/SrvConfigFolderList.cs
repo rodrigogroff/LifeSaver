@@ -15,7 +15,7 @@ namespace Master.Service.Domain.Config
             ret = new DtoConfigFolderListRet();
 
             User user;
-            ItemFolder parentFolder = null;
+            List<ItemFolder> lst;
 
             if (string.IsNullOrEmpty(conn))
                 return ReportError("Connection information failed");
@@ -25,8 +25,6 @@ namespace Master.Service.Domain.Config
 
             if (!userRepo.GetUserById(conn, fkUser, out user))
                 return ReportError("User information failed");
-
-            List<ItemFolder> lst;
 
             if (!itemFolderRepo.GetListByFkUser(conn, fkUser, fkFolder, out lst))
                 return false;

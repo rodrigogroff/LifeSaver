@@ -15,11 +15,14 @@ namespace Master.Service.Domain.Config
                                 string name, 
                                 bool income)
         {
-            User user;
-            ItemFolder parentFolder = null;
+            User user;            
+            ItemFolder tst;
 
             if (string.IsNullOrEmpty(conn))
                 return ReportError("Connection information failed");
+
+            if (string.IsNullOrEmpty(name))
+                return ReportError("Folder information failed");
 
             if (fkUser <= 0)
                 return ReportError("User information failed");
@@ -32,14 +35,14 @@ namespace Master.Service.Domain.Config
 
             if (fkFolder != null)
             {
+                ItemFolder parentFolder = null;
+
                 if (!itemFolderRepo.GetById(conn, (long)fkFolder, out parentFolder))
                     return ReportError("Folder information failed");
 
                 if (parentFolder.fkUser != user.id)
                     return ReportError("Folder information failed");
             }
-
-            ItemFolder tst;
 
             itemFolderRepo.GetByUserFolderName(conn, fkUser, fkFolder, name, out tst);
 

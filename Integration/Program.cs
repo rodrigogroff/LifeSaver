@@ -21,6 +21,8 @@ namespace Integration
             Console.WriteLine("------------------------------------");
             Console.WriteLine("1 QA");
             Console.WriteLine("2 localhost");
+            Console.WriteLine("(select)");
+            Console.WriteLine("");
 
             switch (Console.ReadLine())
             {
@@ -30,10 +32,13 @@ namespace Integration
             while (true)
             {
                 Console.WriteLine("");
-                Console.WriteLine("Module:");
+                Console.WriteLine("------------------------------------");
+                Console.WriteLine("Test Module:");
                 Console.WriteLine("------------------------------------");
                 Console.WriteLine("1 Auth");
                 Console.WriteLine("2 Config");
+                Console.WriteLine("(select)");
+                Console.WriteLine("");
 
                 switch (Console.ReadLine())
                 {
@@ -42,15 +47,20 @@ namespace Integration
                     case "2":
 
                         Console.WriteLine("");
+                        Console.WriteLine("------------------------------------");
                         Console.WriteLine("Config Module:");
                         Console.WriteLine("------------------------------------");
                         Console.WriteLine("0 [Back]");
                         Console.WriteLine("1 Folder Add");
+                        Console.WriteLine("2 Folder Edit");
+                        Console.WriteLine("(select)");
+                        Console.WriteLine("");
 
                         switch (Console.ReadLine())
                         {
                             case "0": break;
                             case "1": FolderAdd(); break;
+                            case "2": FolderEdit(); break;
                         }
 
                         break;
@@ -229,6 +239,50 @@ namespace Integration
             #endregion
         }
 
+        static void FolderListing()
+        {
+            #region - code - 
+
+            try
+            {
+                var dest = baseUri + @"api/v1/config/folder_list";
+
+                var client = new RestClient(dest);
+                var request = new RestRequest();
+
+                request.AddHeader("Content-Type", "application/json");
+
+                client.AddDefaultHeader("Authorization", "Bearer " + token);
+
+                request.RequestFormat = DataFormat.Json;
+                request.Method = Method.POST;
+
+                request.AddBody(new
+                {
+
+                });
+
+                var response = client.Execute(request);
+
+                Console.WriteLine(response.Content.ToString());
+
+                if (response.StatusCode == System.Net.HttpStatusCode.OK)
+                {
+                    Console.WriteLine(" ==== FOLDER_LIST".PadRight(30, ' ') + "OK");
+                }
+                else
+                {
+                    Console.WriteLine(" # FAILED FOLDER_LIST");
+                }
+            }
+            catch (System.Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+
+            #endregion
+        }
+
         static void FolderAdd()
         {
             Login();
@@ -274,11 +328,20 @@ namespace Integration
 
             #endregion
 
-            #region - code - 
+            FolderListing();
+        }
+
+        static void FolderEdit()
+        {
+            Login();
+
+            FolderListing();
+
+            #region - edit - 
 
             try
             {
-                var dest = baseUri + @"api/v1/config/folder_list";
+                var dest = baseUri + @"api/v1/config/folder_edit";
 
                 var client = new RestClient(dest);
                 var request = new RestRequest();
@@ -290,22 +353,28 @@ namespace Integration
                 request.RequestFormat = DataFormat.Json;
                 request.Method = Method.POST;
 
+                Console.WriteLine("Folder id:");
+
+                var id = Console.ReadLine();
+
+                Console.WriteLine("New name:");
+
                 request.AddBody(new
                 {
-                    
+                    id,
+                    new_name = Console.ReadLine()
                 });
 
                 var response = client.Execute(request);
 
-                Console.WriteLine(response.Content.ToString());
-
                 if (response.StatusCode == System.Net.HttpStatusCode.OK)
                 {
-                    Console.WriteLine(" ==== FOLDER_LIST".PadRight(30, ' ') + "OK");
+                    Console.WriteLine(" ==== FOLDER_EDIT".PadRight(30, ' ') + "OK");
                 }
                 else
                 {
-                    Console.WriteLine(" # FAILED FOLDER_LIST");
+                    Console.WriteLine(response.Content.ToString());
+                    Console.WriteLine(" # FAILED FOLDER_EDIT");
                 }
             }
             catch (System.Exception ex)
@@ -314,6 +383,8 @@ namespace Integration
             }
 
             #endregion
+
+            FolderListing();
         }
     }
 }
