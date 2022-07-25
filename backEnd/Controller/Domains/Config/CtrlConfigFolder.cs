@@ -23,6 +23,34 @@ namespace Api.Master.Controllers
         }
 
         [HttpPost]
+        [Route("api/v1/config/folder")]
+        public ActionResult folder([FromBody] DtoConfigFolderGet obj)
+        {
+            #region - code - 
+
+            var currentUser = GetCurrentAuthenticatedUser();
+
+            var srv = new SrvConfigFolderAdd();
+
+            DtoConfigFolder ret;
+
+            if (!srv.FolderAdd(network.pgConnection,
+                                currentUser.ID(),
+                                obj.id,
+                                out ret))
+            {
+                return BadRequest(srv.Error);
+            }
+
+            #endregion
+
+            return Ok(new 
+            {
+                result = ret
+            });
+        }
+
+        [HttpPost]
         [Route("api/v1/config/folder_add")]
         public ActionResult folder_add([FromBody] DtoConfigFolderAdd obj)
         {
@@ -44,6 +72,7 @@ namespace Api.Master.Controllers
             #endregion
 
             CacheCleanup(currentUser.ID(), obj.fkFolder);
+
             return Ok();
         }
         
@@ -67,7 +96,9 @@ namespace Api.Master.Controllers
 
             #endregion
 
-            CacheCleanup(currentUser.ID(), obj.id);
+            // subfolder needs to clean cache
+            CacheCleanup(currentUser.ID(), srv.edit_fkFolder);
+
             return Ok();
         }
 

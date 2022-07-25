@@ -9,6 +9,7 @@ namespace Master.Repository
 {
     public interface IItemRepo
     {
+        public bool GetById(string conn, long id, out Item tbl);
         public bool GetListByFkUserFkFolder(string conn, long fkUser, long fkFolder, out List<Item> lst);
         public bool Update(string conn, Item mdl);
         public long Insert(string conn, Item mdl);
@@ -16,6 +17,33 @@ namespace Master.Repository
 
     public class ItemRepo : IItemRepo
     {
+        public bool GetById(string conn, long id, out Item tbl)
+        {
+            #region - code - 
+
+            try
+            {
+                using (var connection = new NpgsqlConnection(conn))
+                {
+                    connection.Open();
+
+                    tbl = connection.QueryFirstOrDefault<Item>
+                        ("SELECT * FROM \"Item\" where \"id\"=@id",
+                        new { id });
+                }
+
+                return true;
+            }
+            catch
+            {
+                tbl = null;
+                return false;
+            }
+
+            #endregion
+        }
+
+
         public bool GetListByFkUserFkFolder(string conn, long fkUser, long fkFolder, out List<Item> lst)
         {
             #region - code - 

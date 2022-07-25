@@ -8,6 +8,8 @@ namespace Master.Service.Domain.Config.Folder
         public IUserRepo userRepo = new UserRepo();
         public IItemFolderRepo itemFolderRepo = new ItemFolderRepo();
 
+        public long? edit_fkFolder { get; set; }
+
         public bool FolderEdit(string conn,
                                 long fkUser,
                                 long fkFolder,
@@ -43,6 +45,8 @@ namespace Master.Service.Domain.Config.Folder
 
             if (!itemFolderRepo.Update(conn, editFolder))
                 return ReportError("EX01");
+
+            edit_fkFolder = editFolder.fkFolder;
 
             return true;
         }

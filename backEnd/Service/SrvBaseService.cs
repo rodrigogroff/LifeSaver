@@ -22,5 +22,10 @@ namespace Master.Service
             Error = new DtoServiceError { message = msg };
             return false;
         }
+
+        public string D(DateTime? dt)
+        {
+            return Convert.ToDateTime(dt).ToString("dd/MM/yyyy HH:mm");
+        }
     }
 }

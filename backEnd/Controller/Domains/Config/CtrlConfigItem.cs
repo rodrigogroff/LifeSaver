@@ -1,6 +1,6 @@
 ﻿using Master.Entity.Domain.Config.Item;
 using Master.Entity.Infra;
-using Master.Service.Domain.Config.Folder;
+using Master.Service.Domain.Config.Item;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
@@ -23,6 +23,34 @@ namespace Api.Master.Controllers
         }
 
         [HttpPost]
+        [Route("api/v1/config/item_get")]
+        public ActionResult item_get([FromBody] DtoConfigItemGet obj)
+        {
+            #region - code - 
+
+            var currentUser = GetCurrentAuthenticatedUser();
+
+            var srv = new SrvConfigItemGet();
+
+            DtoConfigItem ret;
+
+            if (!srv.ItemGet(network.pgConnection,
+                            currentUser.ID(),
+                            obj.id,
+                            out ret))
+            {
+                return BadRequest(srv.Error);
+            }
+            
+            return Ok(new
+            {
+                result = ret
+            });
+
+            #endregion
+        }
+
+        [HttpPost]
         [Route("api/v1/config/item_add")]
         public ActionResult item_add([FromBody] DtoConfigItemAdd obj)
         {
@@ -31,8 +59,7 @@ namespace Api.Master.Controllers
             var currentUser = GetCurrentAuthenticatedUser();
             
             var srv = new SrvConfigItemAdd();
-
-            ///TODO
+            
             if (!srv.ItemAdd(network.pgConnection,
                                 currentUser.ID(),
                                 obj.fkFolder,
@@ -49,7 +76,34 @@ namespace Api.Master.Controllers
 
             return Ok();
         }
-        
+
+        [HttpPost]
+        [Route("api/v1/config/item_edit")]
+        public ActionResult item_edit([FromBody] DtoConfigItemEdit obj)
+        {
+            #region - code - 
+
+            var currentUser = GetCurrentAuthenticatedUser();
+
+            var srv = new SrvConfigItemAdd();
+
+            if (!srv.ItemAdd(network.pgConnection,
+                                currentUser.ID(),
+                                obj.id,
+                                obj.new_name,
+                                obj.new_timePeriod,
+                                obj.new_standardValue))
+            {
+                return BadRequest(srv.Error);
+            }
+
+            #endregion
+
+            CacheCleanup(currentUser.ID(), obj.id);
+
+            return Ok();
+        }
+
         [HttpPost]
         [Route("api/v1/config/item_list")]
         public ActionResult item_list([FromBody] DtoConfigItemList obj)

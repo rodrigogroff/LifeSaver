@@ -3,7 +3,7 @@ using Master.Entity.Domain.Config.Item;
 using Master.Repository;
 using System.Collections.Generic;
 
-namespace Master.Service.Domain.Config.Folder
+namespace Master.Service.Domain.Config.Item
 {
     public class SrvConfigItemList : SrvBaseService
     {
@@ -22,7 +22,7 @@ namespace Master.Service.Domain.Config.Folder
             ret = new DtoConfigItemListRet();
 
             User user;
-            List<Item> lst;
+            List<Master.Entity.Database.Item> lst;
 
             if (string.IsNullOrEmpty(conn))
                 return ReportError("Connection information failed");
