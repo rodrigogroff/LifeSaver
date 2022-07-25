@@ -1,16 +1,23 @@
 ﻿using Master.Entity.Database;
-using Master.Entity.Domain;
+using Master.Entity.Domain.Config.Folder;
 using Master.Repository;
 using System.Collections.Generic;
 
-namespace Master.Service.Domain.Config
+namespace Master.Service.Domain.Config.Folder
 {
     public class SrvConfigFolderList : SrvBaseService
     {
         public IUserRepo userRepo = new UserRepo();
         public IItemFolderRepo itemFolderRepo = new ItemFolderRepo();
 
-        public bool FolderList ( string conn, long fkUser, long? fkFolder, out DtoConfigFolderListRet ret)
+        public string cacheTag(long fkUser, long? fkFolder)
+        {
+            return "FolderList" + 
+                    fkUser.ToString().PadLeft(12, '0') +
+                    (fkFolder == null ? "" : fkFolder.ToString()).PadLeft(12,'0');
+        }
+
+        public bool FolderList(string conn, long fkUser, long? fkFolder, out DtoConfigFolderListRet ret)
         {
             ret = new DtoConfigFolderListRet();
 
@@ -31,7 +38,7 @@ namespace Master.Service.Domain.Config
 
             foreach (var item in lst)
             {
-                ret.subfolders.Add(new DtoConfigFolderDetail
+                ret.list.Add(new DtoConfigFolderDetail
                 {
                     id = item.id,
                     name = item.stName,

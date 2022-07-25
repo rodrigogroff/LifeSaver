@@ -1,5 +1,5 @@
 ﻿using Master.Entity.Domain;
-using Master.Infra;
+using Master.Entity.Infra;
 using Master.Service.Domain.Auth;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

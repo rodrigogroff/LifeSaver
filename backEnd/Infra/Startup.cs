@@ -1,4 +1,4 @@
-﻿using Master.Infra;
+﻿using Master.Entity.Infra;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;

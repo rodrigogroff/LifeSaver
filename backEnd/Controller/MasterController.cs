@@ -4,7 +4,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using Master.Entity.Domain;
-using Master.Infra;
+using Master.Entity.Infra;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
@@ -88,6 +88,36 @@ namespace Api.Master.Controllers
             return new DateTime((int)I(myDate.Substring(6)),
                                 (int)I(myDate.Substring(3, 2)),
                                 (int)I(myDate.Substring(0, 2)));
+        }
+
+        [NonAction]
+        public string GetCacheFile(string tag)
+        {
+            tag += ".txt";
+
+            if (System.IO.File.Exists(tag))
+                return System.IO.File.ReadAllText(tag);
+
+            return null;            
+        }
+
+        [NonAction]
+        public void SaveCacheFile(string tag, string json)
+        {
+            tag += ".txt";
+
+            if (System.IO.File.Exists(tag))
+                System.IO.File.Delete(tag);
+
+            System.IO.File.WriteAllText(tag, json);
+        }
+
+        [NonAction]
+        public void DeleteCacheFile(string tag)
+        {
+            tag += ".txt";
+            if (System.IO.File.Exists(tag))
+                System.IO.File.Delete(tag);
         }
 
         /*

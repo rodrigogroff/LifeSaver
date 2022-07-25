@@ -1,4 +1,4 @@
-﻿using Master.Entity.Domain;
+﻿using Master.Entity.Infra;
 using System;
 
 namespace Master.Service

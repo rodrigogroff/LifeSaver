@@ -1,15 +1,10 @@
-﻿namespace Master.Entity.Domain
+﻿
+namespace Master.Entity.Domain.Config.Folder
 {
     public class DtoConfigFolderAdd
     {
         public long? fkFolder { get; set; }
         public string name { get; set; }
         public bool income { get; set; }
-    }
-
-    public class DtoConfigFolderEdit
-    {
-        public long id { get; set; }
-        public string new_name { get; set; }
     }
 }

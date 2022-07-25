@@ -2,20 +2,20 @@
 using Master.Repository;
 using System;
 
-namespace Master.Service.Domain.Config
+namespace Master.Service.Domain.Config.Folder
 {
     public class SrvConfigFolderAdd : SrvBaseService
     {
         public IUserRepo userRepo = new UserRepo();
         public IItemFolderRepo itemFolderRepo = new ItemFolderRepo();
 
-        public bool FolderAdd ( string conn, 
-                                long fkUser, 
-                                long? fkFolder, 
-                                string name, 
+        public bool FolderAdd(string conn,
+                                long fkUser,
+                                long? fkFolder,
+                                string name,
                                 bool income)
         {
-            User user;            
+            User user;
             ItemFolder tst;
 
             if (string.IsNullOrEmpty(conn))
