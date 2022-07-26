@@ -1,7 +1,6 @@
 ﻿using Master.Entity.Database;
 using Master.Entity.Domain.Config.Folder;
 using Master.Repository;
-using System.Collections.Generic;
 
 namespace Master.Service.Domain.Config.Folder
 {
@@ -10,9 +9,9 @@ namespace Master.Service.Domain.Config.Folder
         public IUserRepo userRepo = new UserRepo();
         public IItemFolderRepo itemFolderRepo = new ItemFolderRepo();
         
-        public bool FolderGet(string conn, long fkUser, long id, out DtoConfigFolderGet ret)
+        public bool FolderGet(string conn, long fkUser, long id, out DtoConfigFolderGetRet ret)
         {
-            ret = new DtoConfigFolderGet();
+            ret = new DtoConfigFolderGetRet();
 
             User user;
             ItemFolder obj;

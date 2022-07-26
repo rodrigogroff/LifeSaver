@@ -6,5 +6,7 @@
         public string pgConnection { get; set; }
         public int codeExpirationMinutes { get; set; }
         public string cacheDirectory { get; set; }
+
+        public bool cache { get; set; }
     }
 }

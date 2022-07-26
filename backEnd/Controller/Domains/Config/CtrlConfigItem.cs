@@ -72,7 +72,8 @@ namespace Api.Master.Controllers
 
             #endregion
 
-            CacheCleanup(currentUser.ID(), obj.fkFolder);
+            if (network.cache)
+                CacheCleanup(currentUser.ID(), obj.fkFolder);
 
             return Ok();
         }
@@ -85,21 +86,20 @@ namespace Api.Master.Controllers
 
             var currentUser = GetCurrentAuthenticatedUser();
 
-            var srv = new SrvConfigItemAdd();
-
-            if (!srv.ItemAdd(network.pgConnection,
+            var srv = new SrvConfigItemEdit();
+            
+            if (!srv.ItemEdit(network.pgConnection,
                                 currentUser.ID(),
                                 obj.id,
-                                obj.new_name,
-                                obj.new_timePeriod,
-                                obj.new_standardValue))
+                                obj.new_name ))
             {
                 return BadRequest(srv.Error);
             }
 
             #endregion
 
-            CacheCleanup(currentUser.ID(), obj.id);
+            if (network.cache)
+                CacheCleanup(currentUser.ID(), obj.id);
 
             return Ok();
         }
@@ -116,25 +116,30 @@ namespace Api.Master.Controllers
 
             DtoConfigItemListRet ret;
 
-            var fileName = srv.cacheTag(currentUser.ID(), obj.fkFolder);
-            var cache = GetCacheFile(fileName);
+            if (network.cache)
+            {
+                var fileName = srv.cacheTag(currentUser.ID(), obj.fkFolder);
+                var cache = GetCacheFile(fileName);
 
-            if (cache != null)
-            {
-                ret = JsonSerializer.Deserialize<DtoConfigItemListRet>(cache);
-            }
-            else
-            {
-                if (!srv.ItemList(network.pgConnection,
-                                currentUser.ID(),
-                                obj.fkFolder,
-                                out ret))
+                if (cache != null)
                 {
-                    return BadRequest(srv.Error);
+                    ret = JsonSerializer.Deserialize<DtoConfigItemListRet>(cache);
                 }
-
-                SaveCacheFile(fileName, JsonSerializer.Serialize(ret));
             }
+            
+            if (!srv.ItemList(network.pgConnection,
+                            currentUser.ID(),
+                            obj.fkFolder,
+                            out ret))
+            {
+                return BadRequest(srv.Error);
+            }
+
+            if (network.cache)
+            {
+                var fileName = srv.cacheTag(currentUser.ID(), obj.fkFolder);
+                SaveCacheFile(fileName, JsonSerializer.Serialize(ret));
+            }            
 
             return Ok(new
             {

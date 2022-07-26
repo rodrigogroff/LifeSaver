@@ -23,18 +23,18 @@ namespace Api.Master.Controllers
         }
 
         [HttpPost]
-        [Route("api/v1/config/folder")]
+        [Route("api/v1/config/folder_get")]
         public ActionResult folder([FromBody] DtoConfigFolderGet obj)
         {
             #region - code - 
 
             var currentUser = GetCurrentAuthenticatedUser();
 
-            var srv = new SrvConfigFolderAdd();
+            var srv = new SrvConfigFolderGet();
 
-            DtoConfigFolder ret;
+            DtoConfigFolderGetRet ret;
 
-            if (!srv.FolderAdd(network.pgConnection,
+            if (!srv.FolderGet(network.pgConnection,
                                 currentUser.ID(),
                                 obj.id,
                                 out ret))
@@ -70,8 +70,9 @@ namespace Api.Master.Controllers
             }
 
             #endregion
-
-            CacheCleanup(currentUser.ID(), obj.fkFolder);
+            
+            if (network.cache)
+                CacheCleanup(currentUser.ID(), obj.fkFolder);
 
             return Ok();
         }
@@ -96,8 +97,8 @@ namespace Api.Master.Controllers
 
             #endregion
 
-            // subfolder needs to clean cache
-            CacheCleanup(currentUser.ID(), srv.edit_fkFolder);
+            if (network.cache)
+                CacheCleanup(currentUser.ID(), srv.edit_fkFolder);
 
             return Ok();
         }
@@ -114,23 +115,33 @@ namespace Api.Master.Controllers
 
             DtoConfigFolderListRet ret;
 
-            var fileName = srv.cacheTag(currentUser.ID(), obj.fkFolder);
-            var cache = GetCacheFile(fileName);
+            if (network.cache)
+            {
+                var fileName = srv.cacheTag(currentUser.ID(), obj.fkFolder);
+                var cache = GetCacheFile(fileName);
 
-            if (cache != null)
-            {
-                ret = JsonSerializer.Deserialize<DtoConfigFolderListRet>(cache);
-            }
-            else
-            {
-                if (!srv.FolderList(network.pgConnection,
-                                    currentUser.ID(),
-                                    obj.fkFolder,
-                                    out ret))
+                if (cache != null)
                 {
-                    return BadRequest(srv.Error);
-                }
+                    ret = JsonSerializer.Deserialize<DtoConfigFolderListRet>(cache);
 
+                    return Ok(new
+                    {
+                        results = ret.list
+                    });
+                }
+            }
+            
+            if (!srv.FolderList(network.pgConnection,
+                                currentUser.ID(),
+                                obj.fkFolder,
+                                out ret))
+            {
+                return BadRequest(srv.Error);
+            }
+
+            if (network.cache)
+            {
+                var fileName = srv.cacheTag(currentUser.ID(), obj.fkFolder);
                 SaveCacheFile(fileName, JsonSerializer.Serialize(ret));
             }
 
