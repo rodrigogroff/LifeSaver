@@ -11,21 +11,44 @@ namespace Integration
 
     internal class Program
     {
-        public static string baseUri = @"https://instalacao-qa.br.tkelevator.com/API/",
-                             token = "";
+        public static string baseUri = "", token = "";
 
         static void Main(string[] args)
         {
-            Console.WriteLine("");
-            Console.WriteLine("Target options:");
-            Console.WriteLine("------------------------------------");
-            Console.WriteLine("1 QA");
-            Console.WriteLine("2 localhost (padrao)");
-            Console.WriteLine("(select)");
-
-            switch (Console.ReadLine())
+            while (true)
             {
-                case "2": case "": baseUri = @"http://localhost:18524/"; break;
+                Console.WriteLine("");
+                Console.WriteLine("------------------------------------");
+                Console.WriteLine("Startup options:");
+                Console.WriteLine("------------------------------------");
+                Console.WriteLine("0 CLEAN DATABASE");
+                Console.WriteLine("1 QA");
+                Console.WriteLine("2 localhost (padrao)");
+                Console.WriteLine("(select)");
+
+                bool bAbort = true;
+
+                switch (Console.ReadLine())
+                {
+                    case "0":
+                        baseUri = @"http://localhost:18524/";
+                        CleanDB();
+                        bAbort = false;
+                        break;
+
+                    case "2": case "":
+                        baseUri = @"http://localhost:18524/";
+                        bAbort = true;
+                        break;
+
+                    case "1":
+                        baseUri = @"http://localhost:18524/";
+                        bAbort = true;
+                        break;
+                }
+
+                if (bAbort)
+                    break;
             }
 
             Login();
@@ -36,7 +59,8 @@ namespace Integration
                 Console.WriteLine("------------------------------------");
                 Console.WriteLine("Test Module options:");
                 Console.WriteLine("------------------------------------");
-                Console.WriteLine("1 Auth");
+                Console.WriteLine("");
+                Console.WriteLine("1 Registration");
                 Console.WriteLine("2 Config");
                 Console.WriteLine("(select)");
                 
@@ -47,13 +71,16 @@ namespace Integration
                         break;
 
                     case "2":
+                        Login();
+
                         while (true)
                         {
                             Console.WriteLine("");
                             Console.WriteLine("------------------------------------");
                             Console.WriteLine("Config Module option:");
                             Console.WriteLine("------------------------------------");
-                            Console.WriteLine("0 [Back]");
+                            Console.WriteLine("");
+                            Console.WriteLine("[0] << Back");
                             Console.WriteLine("[1] Folder Add             [5] Item Add");
                             Console.WriteLine("[2] Folder Edit            [6] Item Edit");
                             Console.WriteLine("[3] Folder get             [7] Item Get");
@@ -90,128 +117,150 @@ namespace Integration
         {
             #region - code - 
 
-            Console.WriteLine("--------------------");
-            Console.WriteLine("Digite o celular:");
-
-            var mobile = Console.ReadLine();
-
-            #region - code - 
-
-            try
+            while (true)
             {
-                var dest = baseUri + @"api/v1/auth/register";
+                Console.WriteLine("--------------------");
+                Console.WriteLine("Digite o celular:");
 
-                var client = new RestClient(dest);
-                var request = new RestRequest();
+                var mobile = Console.ReadLine();
 
-                request.AddHeader("Content-Type", "application/json");
-                request.RequestFormat = DataFormat.Json;
-                request.Method = Method.POST;
-
-                request.AddBody(new
+                if (mobile == "")
                 {
-                    name = "tst_" + new Random().Next(1000000, 9999999).ToString(),
-                    email = "email" + new Random().Next(1000000, 9999999).ToString() + "_@teste.com",
-                    mobile = mobile,
-                    password = "1425369"
-                });
-
-                var response = client.Execute(request);
-
-                Console.WriteLine(response.Content);
-
-                if (response.StatusCode == System.Net.HttpStatusCode.OK)
-                {
-                    Console.WriteLine(" ==== REGISTER ".PadRight(30, ' ') + "OK");
+                    mobile = "12345678901";
+                    Console.WriteLine("[" + mobile + "]");
                 }
-                else
+
+                #region - code - 
+
+                try
                 {
-                    Console.WriteLine(" # FAILED REGISTER");
-                    return;
-                }
-            }
-            catch (System.Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-            }
+                    var dest = baseUri + @"api/v1/auth/register";
 
-            #endregion
+                    var client = new RestClient(dest);
+                    var request = new RestRequest();
 
-            Console.WriteLine("--------------------");
-            Console.WriteLine("CODIGO:");
+                    request.AddHeader("Content-Type", "application/json");
+                    request.RequestFormat = DataFormat.Json;
+                    request.Method = Method.POST;
 
-            #region - code - 
+                    var email = "email" + new Random().Next(1000000, 9999999).ToString() + "_@teste.com";
 
-            try
-            {
-                var dest = baseUri + @"api/v1/auth/magic_sms_list";
+                    if (mobile == "12345678901")
+                    {
+                        email = "teste@teste.com";
+                    }
 
-                var client = new RestClient(dest);
-                var request = new RestRequest();
+                    request.AddBody(new
+                    {
+                        name = "tst_" + new Random().Next(1000000, 9999999).ToString(),
+                        email = email,
+                        mobile = mobile,
+                        password = "1425369"
+                    });
 
-                request.AddHeader("Content-Type", "application/json");
-                request.RequestFormat = DataFormat.Json;
-                request.Method = Method.POST;
+                    var response = client.Execute(request);
 
-                request.AddBody(new
-                {
-                    mobile = mobile,
-                    magic = "142536"
-                });
-
-                var response = client.Execute(request);
-
-                Console.WriteLine(response.Content);
-            }
-            catch (System.Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-            }
-
-            #endregion
-
-            Console.WriteLine("--------------------");
-            Console.WriteLine("Digite o codigo recebido:");
-
-            #region - code - 
-
-            try
-            {
-                var dest = baseUri + @"api/v1/auth/register_confirm";
-
-                var client = new RestClient(dest);
-                var request = new RestRequest();
-
-                request.AddHeader("Content-Type", "application/json");
-                request.RequestFormat = DataFormat.Json;
-                request.Method = Method.POST;
-
-                request.AddBody(new
-                {
-                    mobile = mobile,
-                    code = Console.ReadLine(),
-                });
-
-                var response = client.Execute(request);
-
-                if (response.StatusCode == System.Net.HttpStatusCode.OK)
-                {
-                    Console.WriteLine(" ==== REGISTER CONFIRM ".PadRight(30, ' ') + "OK");
-                }
-                else
-                {
                     Console.WriteLine(response.Content);
-                    Console.WriteLine(" # FAILED REGISTER CONFIRM");
+
+                    if (response.StatusCode == System.Net.HttpStatusCode.OK)
+                    {
+                        Console.WriteLine(" ==== REGISTER ".PadRight(30, ' ') + "OK");
+                    }
+                    else
+                    {
+                        Console.WriteLine(" # FAILED REGISTER");
+                        continue;
+                    }
                 }
-            }
-            catch (System.Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-            }
+                catch (System.Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                }
 
-            #endregion
+                #endregion
 
-            Console.ReadLine();
+                Console.WriteLine("--------------------");
+                Console.WriteLine("Codigo:");
+
+                #region - code - 
+
+                try
+                {
+                    var dest = baseUri + @"api/v1/auth/magic_sms_list";
+
+                    var client = new RestClient(dest);
+                    var request = new RestRequest();
+
+                    request.AddHeader("Content-Type", "application/json");
+                    request.RequestFormat = DataFormat.Json;
+                    request.Method = Method.POST;
+
+                    request.AddBody(new
+                    {
+                        mobile = mobile,
+                        magic = "142536"
+                    });
+
+                    var response = client.Execute(request);
+
+                    Console.WriteLine(response.Content);
+                }
+                catch (System.Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                }
+
+                #endregion
+
+                Console.WriteLine("--------------------");
+                Console.WriteLine("Digite o codigo recebido:");
+
+                #region - code - 
+
+                try
+                {
+                    var dest = baseUri + @"api/v1/auth/register_confirm";
+
+                    var client = new RestClient(dest);
+                    var request = new RestRequest();
+
+                    request.AddHeader("Content-Type", "application/json");
+                    request.RequestFormat = DataFormat.Json;
+                    request.Method = Method.POST;
+
+                    request.AddBody(new
+                    {
+                        mobile = mobile,
+                        code = Console.ReadLine(),
+                    });
+
+                    var response = client.Execute(request);
+
+                    if (response.StatusCode == System.Net.HttpStatusCode.OK)
+                    {
+                        Console.WriteLine(" ==== REGISTER CONFIRM ".PadRight(30, ' ') + "OK");
+                    }
+                    else
+                    {
+                        Console.WriteLine(response.Content);
+                        Console.WriteLine(" # FAILED REGISTER CONFIRM");
+                    }
+                }
+                catch (System.Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                }
+
+                #endregion
+
+                Console.WriteLine("");
+                Console.WriteLine("Continuar registrando?");
+
+                var u = Console.ReadLine();
+
+                if (u.ToLower() == "n")
+                    break;
+            }
 
             #endregion
         }
@@ -222,6 +271,8 @@ namespace Integration
 
             try
             {
+                Console.WriteLine("Logging...");
+                    
                 var dest = baseUri + @"api/v1/auth/login";
 
                 var client = new RestClient(dest);
@@ -249,7 +300,54 @@ namespace Integration
                 }
                 else
                 {
-                    Console.WriteLine(" # FAILED LOGIN");
+                    Console.WriteLine(" # FAILED LOGIN (register first!)");
+                    return;
+                }
+            }
+            catch (System.Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+
+            #endregion
+        }
+
+        static void CleanDB()
+        {
+            #region - code - 
+
+            Console.WriteLine("Confirm?");
+
+            if (Console.ReadLine().ToLower() != "y")
+                return;
+
+            try
+            {
+                var dest = baseUri + @"api/v1/auth/magic_clean_db";
+
+                var client = new RestClient(dest);
+                var request = new RestRequest();
+
+                request.AddHeader("Content-Type", "application/json");
+                request.RequestFormat = DataFormat.Json;
+                request.Method = Method.POST;
+
+                request.AddBody(new
+                {
+                    magic = "142536"
+                });
+
+                var response = client.Execute(request);
+
+                Console.WriteLine(response.Content);
+
+                if (response.StatusCode == System.Net.HttpStatusCode.OK)
+                {
+                    Console.WriteLine(" ==== CLEANDB ".PadRight(30, ' ') + "OK");
+                }
+                else
+                {
+                    Console.WriteLine(" # FAILED CLEANDB");
                     return;
                 }
             }

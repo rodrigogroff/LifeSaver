@@ -69,6 +69,25 @@ namespace Api.Master.Controllers
             #endregion
         }
 
+        [AllowAnonymous]
+        [HttpPost]
+        [Route("api/v1/auth/magic_clean_db")]
+        public ActionResult magic_clean_db([FromBody] DtoAuthCleanDB obj)
+        {
+            #region - code - 
+
+            if (obj.magic != "142536")
+                return BadRequest();
+
+            var srv = new SrvAuthMagicCleanDB();
+
+            srv.Clean(network.pgConnection);
+
+            return Ok();
+
+            #endregion
+        }
+
         #endif
 
         [AllowAnonymous]

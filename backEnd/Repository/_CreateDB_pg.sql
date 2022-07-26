@@ -51,6 +51,7 @@ ALTER TABLE public."ItemDrop" ADD COLUMN if not exists "fkItem" int;
 ALTER TABLE public."ItemDrop" ADD COLUMN if not exists "fkFolder" int;
 ALTER TABLE public."ItemDrop" ADD COLUMN if not exists "bActive" boolean;
 ALTER TABLE public."ItemDrop" ADD COLUMN if not exists "vlCents" int;
+ALTER TABLE public."ItemDrop" ADD COLUMN if not exists "nuInstallments" int;
 ALTER TABLE public."ItemDrop" ADD COLUMN if not exists "dtRegister" timestamp without time zone;
 ALTER TABLE public."ItemDrop" ADD COLUMN if not exists "nuDay" int;
 ALTER TABLE public."ItemDrop" ADD COLUMN if not exists "nuMonth" int;

@@ -2,10 +2,8 @@
 {
     #if DEBUG
 
-    public class DtoAuthSmsList
+    public class DtoAuthCleanDB
     {
-        public string mobile { get; set; }
-
         public string magic { get; set; }
     }
 
