@@ -21,30 +21,31 @@ namespace Integration
                 Console.WriteLine("------------------------------------");
                 Console.WriteLine("Startup options:");
                 Console.WriteLine("------------------------------------");
-                Console.WriteLine("0 CLEAN DATABASE");
-                Console.WriteLine("1 QA");
-                Console.WriteLine("2 localhost (padrao)");
+                Console.WriteLine("[1] CLEAN DATABASE");                
+                Console.WriteLine("[2] localhost (padrao)");
+                Console.WriteLine("[3] QA");
                 Console.WriteLine("(select)");
 
                 bool bAbort = true;
 
                 switch (Console.ReadLine())
                 {
-                    case "0":
+                    case "1":
                         baseUri = @"http://localhost:18524/";
                         CleanDB();
                         bAbort = false;
                         break;
 
-                    case "2": case "":
+                    case "2":
+                    case "":
                         baseUri = @"http://localhost:18524/";
                         bAbort = true;
                         break;
 
-                    case "1":
+                    case "3":
                         baseUri = @"http://localhost:18524/";
                         bAbort = true;
-                        break;
+                        break;                    
                 }
 
                 if (bAbort)
@@ -60,8 +61,9 @@ namespace Integration
                 Console.WriteLine("Test Module options:");
                 Console.WriteLine("------------------------------------");
                 Console.WriteLine("");
-                Console.WriteLine("1 Registration");
-                Console.WriteLine("2 Config");
+                Console.WriteLine("[1] Registration");
+                Console.WriteLine("[2] Configuration");
+                Console.WriteLine("[3] Entries");
                 Console.WriteLine("(select)");
                 
                 switch (Console.ReadLine())
@@ -782,6 +784,12 @@ namespace Integration
         }
 
         #endregion
+
+        #endregion
+
+        #region - entries -
+
+
 
         #endregion
     }
