@@ -1,5 +1,5 @@
 ﻿using Master.Entity.Database;
-using Master.Infra;
+using Master.Infra.Constant;
 using Master.Repository;
 using System;
 using System.Collections.Generic;

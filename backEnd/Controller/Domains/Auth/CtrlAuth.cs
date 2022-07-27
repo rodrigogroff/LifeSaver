@@ -1,10 +1,12 @@
-﻿using Master.Entity.Domain;
+﻿using Master.Entity.Database;
+using Master.Entity.Domain;
 using Master.Entity.Infra;
 using Master.Service.Domain.Auth;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using System;
+using System.Collections.Generic;
 
 namespace Api.Master.Controllers
 {
@@ -41,7 +43,7 @@ namespace Api.Master.Controllers
             #endregion
         }
 
-        #if DEBUG
+#if DEBUG
 
         [AllowAnonymous]
         [HttpPost]
@@ -88,7 +90,31 @@ namespace Api.Master.Controllers
             #endregion
         }
 
-        #endif
+        [AllowAnonymous]
+        [HttpPost]
+        [Route("api/v1/auth/magic_user_list")]
+        public ActionResult magic_user_list([FromBody] DtoAuthUserList obj)
+        {
+            #region - code - 
+
+            if (obj.magic != "142536")
+                return BadRequest();
+
+            var srv = new SrvAuthMagicUserList();
+
+            List<User> lst;
+
+            srv.UserList(network.pgConnection, out lst);
+
+            return Ok(new
+            {
+                results = lst,
+            });
+
+            #endregion
+        }
+
+#endif
 
         [AllowAnonymous]
         [HttpPost]

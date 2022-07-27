@@ -12,6 +12,7 @@ namespace Master.Entity.Database
         public long? nuDay { get; set; }
         public long? nuMonth { get; set; }
         public long? nuYear { get; set; }
+        public long? nuInstallments { get; set; }
         public bool? bActive { get; set; }
         public DateTime? dtRegister { get; set; }
     }

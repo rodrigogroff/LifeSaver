@@ -1,5 +1,5 @@
 ﻿
-namespace Master.Infra
+namespace Master.Infra.Constant
 {
     public static class TimePeriod
     {
@@ -17,5 +17,18 @@ namespace Master.Infra
             return true;
         }
 
+        public static string translate(long? opt)
+        {
+            switch ((int)opt)
+            {
+                case 1: return "daily"; break;
+                case 2: return "weekly"; break;
+                case 3: return "monthly"; break;
+                case 4: return "yearly"; break;
+                case 5: return "random"; break;
+            }
+
+            return null;
+        }
     }
 }

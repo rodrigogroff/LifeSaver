@@ -56,3 +56,15 @@ ALTER TABLE public."ItemDrop" ADD COLUMN if not exists "dtRegister" timestamp wi
 ALTER TABLE public."ItemDrop" ADD COLUMN if not exists "nuDay" int;
 ALTER TABLE public."ItemDrop" ADD COLUMN if not exists "nuMonth" int;
 ALTER TABLE public."ItemDrop" ADD COLUMN if not exists "nuYear" int;
+
+CREATE TABLE IF NOT EXISTS public."ItemDropRegistry" ( id bigserial NOT NULL, PRIMARY KEY (id)) WITH (OIDS = FALSE);
+ALTER TABLE public."ItemDropRegistry" OWNER to postgres;
+ALTER TABLE public."ItemDropRegistry" ADD COLUMN if not exists "fkUser" int;
+ALTER TABLE public."ItemDropRegistry" ADD COLUMN if not exists "fkFolder" int;
+ALTER TABLE public."ItemDropRegistry" ADD COLUMN if not exists "fkItem" int;
+ALTER TABLE public."ItemDropRegistry" ADD COLUMN if not exists "fkItemDrop" int;
+ALTER TABLE public."ItemDropRegistry" ADD COLUMN if not exists "nuMonth" int;
+ALTER TABLE public."ItemDropRegistry" ADD COLUMN if not exists "nuYear" int;
+ALTER TABLE public."ItemDropRegistry" ADD COLUMN if not exists "nuPayment" int;
+ALTER TABLE public."ItemDropRegistry" ADD COLUMN if not exists "vlCents" int;
+

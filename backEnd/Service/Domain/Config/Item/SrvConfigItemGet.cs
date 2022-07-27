@@ -1,5 +1,6 @@
 ﻿using Master.Entity.Database;
 using Master.Entity.Domain.Config.Item;
+using Master.Infra.Constant;
 using Master.Repository;
 
 namespace Master.Service.Domain.Config.Item
@@ -14,7 +15,7 @@ namespace Master.Service.Domain.Config.Item
             ret = new DtoConfigItem();
 
             User user;
-            Master.Entity.Database.Item item;
+            Entity.Database.Item item;
             
             if (string.IsNullOrEmpty(conn))
                 return ReportError("Connection information failed");
@@ -36,6 +37,7 @@ namespace Master.Service.Domain.Config.Item
             ret.fkFolder = (long)item.fkFolder;
             ret.timePeriod = (long)item.nuPeriod;
             ret.standardValue = (long) item.vlBaseCents;
+            ret.timePeriodDesc = TimePeriod.translate(item.nuPeriod);
 
             return true;
         }

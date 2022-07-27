@@ -23,7 +23,7 @@ namespace Integration
                 Console.WriteLine("------------------------------------");
                 Console.WriteLine("[1] CLEAN DATABASE");                
                 Console.WriteLine("[2] localhost (padrao)");
-                Console.WriteLine("[3] QA");
+                Console.WriteLine("[3] homolog");
                 Console.WriteLine("(select)");
 
                 bool bAbort = true;
@@ -58,18 +58,42 @@ namespace Integration
             {
                 Console.WriteLine("");
                 Console.WriteLine("------------------------------------");
-                Console.WriteLine("Test Module options:");
+                Console.WriteLine("Interactive Test Modules");
                 Console.WriteLine("------------------------------------");
                 Console.WriteLine("");
-                Console.WriteLine("[1] Registration");
+                Console.WriteLine("[1] Authorization");
                 Console.WriteLine("[2] Configuration");
                 Console.WriteLine("[3] Entries");
                 Console.WriteLine("(select)");
                 
                 switch (Console.ReadLine())
                 {
-                    case "1": 
-                        Registration(); 
+                    case "1":
+
+                        while (true)
+                        {
+                            Console.WriteLine("");
+                            Console.WriteLine("------------------------------------");
+                            Console.WriteLine("Authorization Module options:");
+                            Console.WriteLine("------------------------------------");
+                            Console.WriteLine("");
+                            Console.WriteLine("[0] << Back");
+                            Console.WriteLine("[1] Registration");
+                            Console.WriteLine("[2] User List");
+                            Console.WriteLine("(select)");
+
+                            bool bAbort = false;
+
+                            switch (Console.ReadLine())
+                            {
+                                case "0": bAbort = true; break;
+                                case "1": Registration(); break;
+                                case "2": UserListing(); break;                                
+                            }
+
+                            if (bAbort)
+                                break;
+                        }                        
                         break;
 
                     case "2":
@@ -79,7 +103,7 @@ namespace Integration
                         {
                             Console.WriteLine("");
                             Console.WriteLine("------------------------------------");
-                            Console.WriteLine("Config Module option:");
+                            Console.WriteLine("Config Module options:");
                             Console.WriteLine("------------------------------------");
                             Console.WriteLine("");
                             Console.WriteLine("[0] << Back");
@@ -102,6 +126,37 @@ namespace Integration
                                 case "6": ItemEdit(); break;
                                 case "7": ItemGet(); break;
                                 case "8": ItemListing(); break;
+                            }
+
+                            if (bAbort)
+                                break;
+                        }
+
+                        break;
+
+                    case "3":
+
+                        Login();
+
+                        while (true)
+                        {
+                            Console.WriteLine("");
+                            Console.WriteLine("------------------------------------");
+                            Console.WriteLine("Entries Module options:");
+                            Console.WriteLine("------------------------------------");
+                            Console.WriteLine("");
+                            Console.WriteLine("[0] << Back");
+                            Console.WriteLine("[1] ItemDrop Add");
+                            Console.WriteLine("[2] ItemDrop List");
+                            Console.WriteLine("(select)");
+
+                            bool bAbort = false;
+
+                            switch (Console.ReadLine())
+                            {
+                                case "0": bAbort = true; break;
+                                case "1": ItemDropAdd(); break;
+                                case "2": ItemDropListing(); break;
                             }
 
                             if (bAbort)
@@ -132,6 +187,19 @@ namespace Integration
                     Console.WriteLine("[" + mobile + "]");
                 }
 
+                Console.WriteLine("Digite o email:");
+
+                var email = Console.ReadLine();
+
+                if (email == "")
+                {
+                    email = "teste@teste.com";                    
+                }
+                else
+                    email = "email" + new Random().Next(1000000, 9999999).ToString() + "_@teste.com";
+
+                Console.WriteLine("[" + email + "]");
+
                 #region - code - 
 
                 try
@@ -144,13 +212,6 @@ namespace Integration
                     request.AddHeader("Content-Type", "application/json");
                     request.RequestFormat = DataFormat.Json;
                     request.Method = Method.POST;
-
-                    var email = "email" + new Random().Next(1000000, 9999999).ToString() + "_@teste.com";
-
-                    if (mobile == "12345678901")
-                    {
-                        email = "teste@teste.com";
-                    }
 
                     request.AddBody(new
                     {
@@ -351,6 +412,49 @@ namespace Integration
                 {
                     Console.WriteLine(" # FAILED CLEANDB");
                     return;
+                }
+            }
+            catch (System.Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+
+            #endregion
+        }
+
+        static void UserListing()
+        {
+            #region - code - 
+
+            try
+            {
+                var dest = baseUri + @"api/v1/auth/magic_user_list";
+
+                var client = new RestClient(dest);
+                var request = new RestRequest();
+
+                request.AddHeader("Content-Type", "application/json");
+
+                request.AddHeader("Content-Type", "application/json");
+                request.RequestFormat = DataFormat.Json;
+                request.Method = Method.POST;
+
+                request.AddBody(new
+                {
+                    magic = "142536"
+                });
+
+                var response = client.Execute(request);
+
+                Console.WriteLine(response.Content.ToString());
+
+                if (response.StatusCode == System.Net.HttpStatusCode.OK)
+                {
+                    Console.WriteLine(" ==== MAGIC_USER_LIST".PadRight(30, ' ') + "OK");
+                }
+                else
+                {
+                    Console.WriteLine(" # FAILED MAGIC_USER_LIST");
                 }
             }
             catch (System.Exception ex)
@@ -789,7 +893,216 @@ namespace Integration
 
         #region - entries -
 
+        static void ItemDropAdd()
+        {
+            #region - code - 
 
+            try
+            {
+                var dest = baseUri + @"api/v1/entries/itemdrop_add";
+
+                var client = new RestClient(dest);
+                var request = new RestRequest();
+
+                request.AddHeader("Content-Type", "application/json");
+
+                client.AddDefaultHeader("Authorization", "Bearer " + token);
+
+                request.RequestFormat = DataFormat.Json;
+                request.Method = Method.POST;
+
+                Console.WriteLine("New item day:");
+
+                var _day = Console.ReadLine();
+
+                if (_day == "")
+                {
+                    _day = DateTime.Now.Day.ToString();
+                    Console.WriteLine("[" + _day + "]");
+                }
+
+                var day = Convert.ToInt64(_day);
+
+                Console.WriteLine("New item month:");
+
+                var _month = Console.ReadLine();
+
+                if (_month == "")
+                {
+                    _month = DateTime.Now.Month.ToString();
+                    Console.WriteLine("[" + _month + "]");
+                }
+
+                var month = Convert.ToInt64(_month);
+
+                Console.WriteLine("New item year:");
+
+                var _year = Console.ReadLine();
+
+                if (_year == "")
+                {
+                    _year = DateTime.Now.Year.ToString();
+                    Console.WriteLine("[" + _year + "]");
+                }
+
+                var year = Convert.ToInt64(_year);
+
+                Console.WriteLine("New item folder id:");
+
+                var fkFolder = Convert.ToInt64(Console.ReadLine());
+
+                Console.WriteLine("New item id:");
+
+                var fkItem = Convert.ToInt64(Console.ReadLine());
+
+                Console.WriteLine("Cents:");
+
+                var cents = Convert.ToInt64(Console.ReadLine());
+
+                Console.WriteLine("Installments:");
+
+                var i = Console.ReadLine();
+
+                if (i == "")
+                {
+                    Console.WriteLine("[1]");
+                    i = "1";
+                }
+
+                var installments = Convert.ToInt64(i);
+
+                request.AddBody(new
+                {
+                    fkFolder,
+                    fkItem,                    
+                    cents,
+                    installments,
+                    day,
+                    month,
+                    year
+                });
+
+                var response = client.Execute(request);
+
+                Console.WriteLine(response.Content.ToString());
+
+                if (response.StatusCode == System.Net.HttpStatusCode.OK)
+                {
+                    Console.WriteLine(" ==== ITEMDROP_ADD".PadRight(30, ' ') + "OK");
+                }
+                else
+                {
+                    Console.WriteLine(response.Content.ToString());
+                    Console.WriteLine(" # FAILED ITEMDROP_ADD");
+                }
+            }
+            catch (System.Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+
+            #endregion
+        }
+
+        static void ItemDropListing()
+        {
+            #region - code - 
+
+            try
+            {
+                var dest = baseUri + @"api/v1/entries/itemdrop_list";
+
+                var client = new RestClient(dest);
+                var request = new RestRequest();
+
+                request.AddHeader("Content-Type", "application/json");
+
+                client.AddDefaultHeader("Authorization", "Bearer " + token);
+
+                request.RequestFormat = DataFormat.Json;
+                request.Method = Method.POST;
+
+                Console.WriteLine("Folder id:");
+
+                var input = Console.ReadLine();
+                long? folder = null;
+
+                if (input != "")
+                    folder = Convert.ToInt64(input);
+
+                Console.WriteLine("item id:");
+
+                var inputItem = Console.ReadLine();
+                long? _item = null;
+
+                if (inputItem != "")
+                    _item = Convert.ToInt64(input);
+
+                Console.WriteLine("day:");
+
+                var _day = Console.ReadLine();
+
+                if (_day == "")
+                {
+                    _day = DateTime.Now.Day.ToString();
+                    Console.WriteLine("[" + _day + "]");
+                }
+
+                var day = Convert.ToInt64(_day);
+
+                Console.WriteLine("month:");
+
+                var _month = Console.ReadLine();
+
+                if (_month == "")
+                {
+                    _month = DateTime.Now.Month.ToString();
+                    Console.WriteLine("[" + _month + "]");
+                }
+
+                var month = Convert.ToInt64(_month);
+
+                Console.WriteLine("year:");
+
+                var _year = Console.ReadLine();
+
+                if (_year == "")
+                {
+                    _year = DateTime.Now.Year.ToString();
+                    Console.WriteLine("[" + _year + "]");
+                }
+
+                var year = Convert.ToInt64(_year);
+
+                request.AddBody(new
+                {
+                    fkFolder = folder,
+                    fkItem = _item,
+                    day,
+                    month,
+                    year
+                });
+
+                var response = client.Execute(request);
+
+                Console.WriteLine(response.Content.ToString());
+
+                if (response.StatusCode == System.Net.HttpStatusCode.OK)
+                {
+                    Console.WriteLine(" ==== ITEMDROP_LIST".PadRight(30, ' ') + "OK");
+                }
+                else
+                {
+                    Console.WriteLine(" # FAILED ITEMDROP_LIST");
+                }
+            }
+            catch (System.Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+
+            #endregion
+        }
 
         #endregion
     }

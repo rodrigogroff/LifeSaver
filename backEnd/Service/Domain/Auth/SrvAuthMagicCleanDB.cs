@@ -13,6 +13,7 @@ namespace Master.Service.Domain.Auth
 
                 db.Query("delete from \"Item\"");
                 db.Query("delete from \"ItemDrop\"");
+                db.Query("delete from \"ItemDropRegistry\"");
                 db.Query("delete from \"ItemFolder\"");
                 db.Query("delete from \"User\"");
                 db.Query("delete from \"UserPassRenewal\"");

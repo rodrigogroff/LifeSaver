@@ -1,5 +1,6 @@
 ﻿using Master.Entity.Database;
 using Master.Entity.Domain.Config.Item;
+using Master.Infra.Constant;
 using Master.Repository;
 using System.Collections.Generic;
 
@@ -45,6 +46,7 @@ namespace Master.Service.Domain.Config.Item
                     name = item.stName,
                     standardValue = (long) item.vlBaseCents,
                     timePeriod = (long) item.nuPeriod,
+                    timePeriodDesc = TimePeriod.translate(item.nuPeriod)
                 });
             }
 
