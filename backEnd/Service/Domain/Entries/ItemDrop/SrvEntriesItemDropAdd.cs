@@ -61,6 +61,7 @@ namespace Master.Service.Domain.Entries.ItemDrop
                 nuDay = day,
                 nuMonth  = month,
                 nuYear = year,
+                bIncome =  folder.bIncome,
                 vlCents = cents
             };
 
@@ -82,6 +83,7 @@ namespace Master.Service.Domain.Entries.ItemDrop
                     nuMonth = dtTarget.Month,
                     nuYear = dtTarget.Year,
                     nuPayment = i + 1,
+                    bIncome = folder.bIncome,
                     vlCents = cents / installments
                 };
 

@@ -14,6 +14,7 @@ namespace Master.Entity.Database
         public long? nuYear { get; set; }
         public long? nuInstallments { get; set; }
         public bool? bActive { get; set; }
+        public bool? bIncome { get; set; }
         public DateTime? dtRegister { get; set; }
     }
 }

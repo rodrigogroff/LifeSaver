@@ -50,7 +50,7 @@ namespace Master.Service.Domain.Config.Item
 
             var newItem = new Master.Entity.Database.Item
             {
-                bIncome = true,
+                bIncome = folder.bIncome,
                 nuPeriod = timePeriod,
                 vlBaseCents = standardValue,
                 dtRegister = DateTime.Now,

@@ -25,6 +25,7 @@ namespace Master.Repository
             cmd.Parameters.AddWithValue("nuYear", ((object)mdl.nuYear) ?? DBNull.Value);
             cmd.Parameters.AddWithValue("nuPayment", ((object)mdl.nuPayment) ?? DBNull.Value);
             cmd.Parameters.AddWithValue("vlCents", ((object)mdl.vlCents) ?? DBNull.Value);
+            cmd.Parameters.AddWithValue("bIncome", ((object)mdl.bIncome) ?? DBNull.Value);
 
             #endregion
         }
@@ -47,6 +48,7 @@ namespace Master.Repository
                         "\"nuMonth\"=@nuMonth," +
                         "\"nuYear\"=@nuYear," +
                         "\"nuPayment\"=@nuPayment," +
+                        "\"bIncome\"=@bIncome," +
                         "\"vlCents\"=@vlCents " +
                         "where id=@id", db))
                     {
@@ -76,8 +78,8 @@ namespace Master.Repository
                     db.Open();
 
                     using (var cmd = new NpgsqlCommand("INSERT INTO \"ItemDropRegistry\" " +
-                        "( \"fkItem\",\"fkUser\",\"fkFolder\",\"fkItemDrop\",\"nuMonth\",\"nuYear\",\"nuPayment\",\"vlCents\" ) " +
-                        "VALUES (@fkItem,@fkUser,@fkFolder,@fkItemDrop,@nuMonth,@nuYear,@nuPayment,@vlCents)" +
+                        "( \"fkItem\",\"fkUser\",\"fkFolder\",\"fkItemDrop\",\"nuMonth\",\"nuYear\",\"nuPayment\",\"vlCents\",\"bIncome\" ) " +
+                        "VALUES (@fkItem,@fkUser,@fkFolder,@fkItemDrop,@nuMonth,@nuYear,@nuPayment,@vlCents,@bIncome)" +
                         ";select currval('public.\"ItemDropRegistry_id_seq\"');", db))
                     {
                         setUserParams(cmd, mdl);

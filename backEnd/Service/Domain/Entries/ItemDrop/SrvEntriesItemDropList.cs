@@ -1,7 +1,8 @@
-﻿using Master.Entity.Database;
+﻿using System;
+using System.Collections.Generic;
+using Master.Entity.Database;
 using Master.Entity.Domain.Entries;
 using Master.Repository;
-using System.Collections.Generic;
 
 namespace Master.Service.Domain.Entries.ItemDrop
 {
@@ -59,6 +60,15 @@ namespace Master.Service.Domain.Entries.ItemDrop
 
             if (month == null)
                 return ReportError("Month information failed");
+
+            try
+            {
+                var _x = new DateTime((int)year, (int)month, (int)day);
+            }
+            catch
+            {
+                return ReportError("Date information failed");
+            }
 
             List<Entity.Database.ItemDrop> lst_db;
 

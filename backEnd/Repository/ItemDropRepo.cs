@@ -29,6 +29,7 @@ namespace Master.Repository
             cmd.Parameters.AddWithValue("nuMonth", ((object)mdl.nuMonth) ?? DBNull.Value);
             cmd.Parameters.AddWithValue("nuYear", ((object)mdl.nuYear) ?? DBNull.Value);
             cmd.Parameters.AddWithValue("bActive", ((object)mdl.bActive) ?? DBNull.Value);
+            cmd.Parameters.AddWithValue("bIncome", ((object)mdl.bIncome) ?? DBNull.Value);
             cmd.Parameters.AddWithValue("dtRegister", ((object)mdl.dtRegister) ?? DBNull.Value);
             cmd.Parameters.AddWithValue("nuInstallments", ((object)mdl.nuInstallments) ?? DBNull.Value);
 
@@ -54,6 +55,7 @@ namespace Master.Repository
                         "\"nuMonth\"=@nuMonth," +
                         "\"nuYear\"=@nuYear," +
                         "\"bActive\"=@bActive," +
+                        "\"bIncome\"=@bIncome," +
                         "\"nuInstallments\"=@nuInstallments," +
                         "\"dtRegister\"=@dtRegister " +
                         "where id=@id", db))
@@ -84,8 +86,8 @@ namespace Master.Repository
                     db.Open();
 
                     using (var cmd = new NpgsqlCommand("INSERT INTO \"ItemDrop\" " +
-                        "( \"fkItem\",\"fkUser\",\"fkFolder\",\"vlCents\",\"nuDay\",\"nuMonth\",\"nuYear\",\"bActive\",\"dtRegister\",\"nuInstallments\" ) " +
-                        "VALUES (@fkItem,@fkUser,@fkFolder,@vlCents,@nuDay,@nuMonth,@nuYear,@bActive,@dtRegister,@nuInstallments)" +
+                        "( \"fkItem\",\"fkUser\",\"fkFolder\",\"vlCents\",\"nuDay\",\"nuMonth\",\"nuYear\",\"bActive\",\"dtRegister\",\"nuInstallments\",\"bIncome\" ) " +
+                        "VALUES (@fkItem,@fkUser,@fkFolder,@vlCents,@nuDay,@nuMonth,@nuYear,@bActive,@dtRegister,@nuInstallments,@bIncome)" +
                         ";select currval('public.\"ItemDrop_id_seq\"');", db))
                     {
                         setUserParams(cmd, mdl);
@@ -116,8 +118,7 @@ namespace Master.Repository
                 using (var connection = new NpgsqlConnection(conn))
                 {
                     connection.Open();
-
-                    
+                                        
                     var str = "SELECT * FROM \"ItemDrop\" where \"fkFolder\"=@fkFolder " +
                                                         (fkItem != null ? " and \"fkItem\"=@fkItem" : "") +
                                                         (day != null ? " and \"nuDay\"=@day" : "") +

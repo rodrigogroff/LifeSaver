@@ -11,5 +11,6 @@
         public long? nuYear { get; set; }
         public long? nuPayment { get; set; }
         public long? vlCents { get; set; }
+        public bool? bIncome { get; set; }
     }
 }
