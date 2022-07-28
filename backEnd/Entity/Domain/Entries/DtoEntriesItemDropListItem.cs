@@ -9,5 +9,7 @@
         public long cents { get; set; }
 
         public long installments { get; set; }
+
+        public bool bIncome { get; set; }
     }
 }

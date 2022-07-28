@@ -91,6 +91,7 @@ namespace Master.Service.Domain.Entries.ItemDrop
                     cents = (long) i.vlCents,
                     date_register = D(i.dtRegister),
                     installments = (long) i.nuInstallments,
+                    bIncome = (bool) i.bIncome,
                 });
             }
 

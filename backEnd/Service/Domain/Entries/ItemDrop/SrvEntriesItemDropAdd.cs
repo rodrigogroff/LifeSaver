@@ -13,14 +13,14 @@ namespace Master.Service.Domain.Entries.ItemDrop
         public IItemDropRegistryRepo itemDropRegistryRepo = new ItemDropRegistryRepo();
 
         public bool Add(string conn,
-                                long fkUser,
-                                long fkFolder,
-                                long fkItem,
-                                long cents,
-                                long installments,
-                                long day,
-                                long month,
-                                long year )
+                        long fkUser,
+                        long fkFolder,
+                        long fkItem,
+                        long cents,
+                        long installments,
+                        long day,
+                        long month,
+                        long year )
         {
             User user;
             Item item;

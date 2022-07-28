@@ -471,13 +471,13 @@ namespace Integration
 
         #region - folder - 
 
-        static void FolderListing()
+        static void FolderAdd()
         {
             #region - code - 
 
             try
             {
-                var dest = baseUri + @"api/v1/config/folder_list";
+                var dest = baseUri + @"api/v1/config/folder_add";
 
                 var client = new RestClient(dest);
                 var request = new RestRequest();
@@ -489,17 +489,18 @@ namespace Integration
                 request.RequestFormat = DataFormat.Json;
                 request.Method = Method.POST;
 
-                Console.WriteLine("Folder id: (empty for null)");
+                Console.WriteLine("New folder name:");
 
-                var input = Console.ReadLine();
-                long? folder = null;
-                
-                if (input != "") 
-                    folder = Convert.ToInt64(input);
+                var _name = Console.ReadLine();
+
+                Console.WriteLine("Incoming [f]:");
+
+                var _inc = Console.ReadLine().ToLower();
 
                 request.AddBody(new
                 {
-                    fkFolder = folder
+                    name = _name,
+                    income = _inc == "t",
                 });
 
                 var response = client.Execute(request);
@@ -508,11 +509,64 @@ namespace Integration
 
                 if (response.StatusCode == System.Net.HttpStatusCode.OK)
                 {
-                    Console.WriteLine(" ==== FOLDER_LIST".PadRight(30, ' ') + "OK");
+                    Console.WriteLine(" ==== FOLDER_ADD".PadRight(30, ' ') + "OK");
                 }
                 else
                 {
-                    Console.WriteLine(" # FAILED FOLDER_LIST");
+                    Console.WriteLine(response.Content.ToString());
+                    Console.WriteLine(" # FAILED FOLDER_ADD");
+                }
+            }
+            catch (System.Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+
+            #endregion
+        }
+        
+        static void FolderEdit()
+        {
+            #region - code - 
+
+            try
+            {
+                var dest = baseUri + @"api/v1/config/folder_edit";
+
+                var client = new RestClient(dest);
+                var request = new RestRequest();
+
+                request.AddHeader("Content-Type", "application/json");
+
+                client.AddDefaultHeader("Authorization", "Bearer " + token);
+
+                request.RequestFormat = DataFormat.Json;
+                request.Method = Method.POST;
+
+                Console.WriteLine("Folder id:");
+
+                var id = Console.ReadLine();
+
+                Console.WriteLine("New name:");
+
+                request.AddBody(new
+                {
+                    id,
+                    new_name = Console.ReadLine()
+                });
+
+                var response = client.Execute(request);
+
+                Console.WriteLine(response.Content.ToString());
+
+                if (response.StatusCode == System.Net.HttpStatusCode.OK)
+                {
+                    Console.WriteLine(" ==== FOLDER_EDIT".PadRight(30, ' ') + "OK");
+                }
+                else
+                {
+                    Console.WriteLine(response.Content.ToString());
+                    Console.WriteLine(" # FAILED FOLDER_EDIT");
                 }
             }
             catch (System.Exception ex)
@@ -569,13 +623,13 @@ namespace Integration
             #endregion
         }
 
-        static void FolderAdd()
+        static void FolderListing()
         {
             #region - code - 
 
             try
             {
-                var dest = baseUri + @"api/v1/config/folder_add";
+                var dest = baseUri + @"api/v1/config/folder_list";
 
                 var client = new RestClient(dest);
                 var request = new RestRequest();
@@ -587,111 +641,7 @@ namespace Integration
                 request.RequestFormat = DataFormat.Json;
                 request.Method = Method.POST;
 
-                Console.WriteLine("New folder name:");
-
-                request.AddBody(new
-                {
-                    name = Console.ReadLine(),
-                    income = false,
-                });
-
-                var response = client.Execute(request);
-
-                Console.WriteLine(response.Content.ToString());
-
-                if (response.StatusCode == System.Net.HttpStatusCode.OK)
-                {
-                    Console.WriteLine(" ==== FOLDER_ADD".PadRight(30, ' ') + "OK");
-                }
-                else
-                {
-                    Console.WriteLine(response.Content.ToString());
-                    Console.WriteLine(" # FAILED FOLDER_ADD");
-                }
-            }
-            catch (System.Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-            }
-
-            #endregion
-        }
-
-        static void FolderEdit()
-        {
-            #region - code - 
-
-            try
-            {
-                var dest = baseUri + @"api/v1/config/folder_edit";
-
-                var client = new RestClient(dest);
-                var request = new RestRequest();
-
-                request.AddHeader("Content-Type", "application/json");
-
-                client.AddDefaultHeader("Authorization", "Bearer " + token);
-
-                request.RequestFormat = DataFormat.Json;
-                request.Method = Method.POST;
-
-                Console.WriteLine("Folder id:");
-
-                var id = Console.ReadLine();
-
-                Console.WriteLine("New name:");
-
-                request.AddBody(new
-                {
-                    id,
-                    new_name = Console.ReadLine()
-                });
-
-                var response = client.Execute(request);
-
-                Console.WriteLine(response.Content.ToString());
-
-                if (response.StatusCode == System.Net.HttpStatusCode.OK)
-                {
-                    Console.WriteLine(" ==== FOLDER_EDIT".PadRight(30, ' ') + "OK");
-                }
-                else
-                {
-                    Console.WriteLine(response.Content.ToString());
-                    Console.WriteLine(" # FAILED FOLDER_EDIT");
-                }
-            }
-            catch (System.Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-            }
-
-            #endregion
-        }
-
-        #endregion
-
-        #region - item -
-
-        static void ItemListing()
-        {
-            #region - code - 
-
-            try
-            {
-                var dest = baseUri + @"api/v1/config/item_list";
-
-                var client = new RestClient(dest);
-                var request = new RestRequest();
-
-                request.AddHeader("Content-Type", "application/json");
-
-                client.AddDefaultHeader("Authorization", "Bearer " + token);
-
-                request.RequestFormat = DataFormat.Json;
-                request.Method = Method.POST;
-
-                Console.WriteLine("Folder id:");
+                Console.WriteLine("Folder id: (empty for null)");
 
                 var input = Console.ReadLine();
                 long? folder = null;
@@ -710,11 +660,11 @@ namespace Integration
 
                 if (response.StatusCode == System.Net.HttpStatusCode.OK)
                 {
-                    Console.WriteLine(" ==== ITEM_LIST".PadRight(30, ' ') + "OK");
+                    Console.WriteLine(" ==== FOLDER_LIST".PadRight(30, ' ') + "OK");
                 }
                 else
                 {
-                    Console.WriteLine(" # FAILED ITEM_LIST");
+                    Console.WriteLine(" # FAILED FOLDER_LIST");
                 }
             }
             catch (System.Exception ex)
@@ -725,51 +675,9 @@ namespace Integration
             #endregion
         }
 
-        static void ItemGet()
-        {
-            #region - code - 
+        #endregion
 
-            try
-            {
-                var dest = baseUri + @"api/v1/config/item_get";
-
-                var client = new RestClient(dest);
-                var request = new RestRequest();
-
-                request.AddHeader("Content-Type", "application/json");
-
-                client.AddDefaultHeader("Authorization", "Bearer " + token);
-
-                request.RequestFormat = DataFormat.Json;
-                request.Method = Method.POST;
-
-                Console.WriteLine("Entre o ID do item:");
-
-                request.AddBody(new
-                {
-                    id = Convert.ToInt64(Console.ReadLine()),
-                });
-
-                var response = client.Execute(request);
-
-                Console.WriteLine(response.Content.ToString());
-
-                if (response.StatusCode == System.Net.HttpStatusCode.OK)
-                {
-                    Console.WriteLine(" ==== ITEM_GET".PadRight(30, ' ') + "OK");
-                }
-                else
-                {
-                    Console.WriteLine(" # FAILED ITEM_GET");
-                }
-            }
-            catch (System.Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-            }
-
-            #endregion
-        }
+        #region - item -
 
         static void ItemAdd()
         {
@@ -835,6 +743,52 @@ namespace Integration
             #endregion
         }
 
+        static void ItemGet()
+        {
+            #region - code - 
+
+            try
+            {
+                var dest = baseUri + @"api/v1/config/item_get";
+
+                var client = new RestClient(dest);
+                var request = new RestRequest();
+
+                request.AddHeader("Content-Type", "application/json");
+
+                client.AddDefaultHeader("Authorization", "Bearer " + token);
+
+                request.RequestFormat = DataFormat.Json;
+                request.Method = Method.POST;
+
+                Console.WriteLine("Entre o ID do item:");
+
+                request.AddBody(new
+                {
+                    id = Convert.ToInt64(Console.ReadLine()),
+                });
+
+                var response = client.Execute(request);
+
+                Console.WriteLine(response.Content.ToString());
+
+                if (response.StatusCode == System.Net.HttpStatusCode.OK)
+                {
+                    Console.WriteLine(" ==== ITEM_GET".PadRight(30, ' ') + "OK");
+                }
+                else
+                {
+                    Console.WriteLine(" # FAILED ITEM_GET");
+                }
+            }
+            catch (System.Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+
+            #endregion
+        }
+
         static void ItemEdit()
         {
             #region - code - 
@@ -877,6 +831,58 @@ namespace Integration
                 {
                     Console.WriteLine(response.Content.ToString());
                     Console.WriteLine(" # FAILED ITEM_EDIT");
+                }
+            }
+            catch (System.Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+
+            #endregion
+        }
+
+        static void ItemListing()
+        {
+            #region - code - 
+
+            try
+            {
+                var dest = baseUri + @"api/v1/config/item_list";
+
+                var client = new RestClient(dest);
+                var request = new RestRequest();
+
+                request.AddHeader("Content-Type", "application/json");
+
+                client.AddDefaultHeader("Authorization", "Bearer " + token);
+
+                request.RequestFormat = DataFormat.Json;
+                request.Method = Method.POST;
+
+                Console.WriteLine("Folder id:");
+
+                var input = Console.ReadLine();
+                long? folder = null;
+
+                if (input != "")
+                    folder = Convert.ToInt64(input);
+
+                request.AddBody(new
+                {
+                    fkFolder = folder
+                });
+
+                var response = client.Execute(request);
+
+                Console.WriteLine(response.Content.ToString());
+
+                if (response.StatusCode == System.Net.HttpStatusCode.OK)
+                {
+                    Console.WriteLine(" ==== ITEM_LIST".PadRight(30, ' ') + "OK");
+                }
+                else
+                {
+                    Console.WriteLine(" # FAILED ITEM_LIST");
                 }
             }
             catch (System.Exception ex)

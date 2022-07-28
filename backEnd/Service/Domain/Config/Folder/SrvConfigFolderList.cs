@@ -42,6 +42,7 @@ namespace Master.Service.Domain.Config.Folder
                 {
                     id = item.id,
                     name = item.stName,
+                    income = (bool) item.bIncome,
                 });
             }
 
